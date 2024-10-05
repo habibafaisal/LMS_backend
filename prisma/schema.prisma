@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,151 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDET
+}
+
+// user for auth & roles
+model User {
+  user_id   Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  role      Role
+  createdAt DateTime @default(now())
+  // relations
+  students  Student?
+  teachers  Teacher?
+}
+
+model Teacher {
+  teacher_id    Int        @id @default(autoincrement())
+  first_name    String     @db.VarChar(100)
+  last_name     String     @db.VarChar(100)
+  department_id Int
+  department    Department @relation(fields: [department_id], references: [department_id])
+
+  // relation to user model
+  user_id Int  @unique
+  user    User @relation(fields: [user_id], references: [user_id])
+
+  // courses teacher is teaching
+  teacher_courses Teacher_Course[]
+}
+
+model Student {
+  student_id     Int        @id @default(autoincrement())
+  first_name     String     @db.VarChar(100)
+  last_name      String     @db.VarChar(100)
+  phone_number   String     @db.VarChar(15)
+  department_id  Int
+  batch_id       Int
+  section_id     Int
+  admission_date DateTime
+  department     Department @relation(fields: [department_id], references: [department_id])
+  batch          Batch      @relation(fields: [batch_id], references: [batch_id])
+  section        Section    @relation(fields: [section_id], references: [section_id])
+
+  // relation to user model
+  user_id Int  @unique
+  user    User @relation(fields: [user_id], references: [user_id])
+
+  // courses student is enrolled in
+  enrollments Enrollment[]
+  Grade       Grade[]
+}
+
+model Department {
+  department_id    Int                @id @default(autoincrement())
+  department_name  String             @db.VarChar(100)
+  // relations
+  teachers         Teacher[]
+  students         Student[]
+  courses          Course[]
+  Department_Batch Department_Batch[]
+}
+
+model Batch {
+  batch_id     Int                @id @default(autoincrement())
+  batch_year   Int
+  dept_batches Department_Batch[]
+  Student      Student[]
+}
+
+model Department_Batch {
+  dept_batch_id Int        @id @default(autoincrement())
+  department_id Int
+  batch_id      Int
+  department    Department @relation(fields: [department_id], references: [department_id])
+
+  batch    Batch     @relation(fields: [batch_id], references: [batch_id])
+  sections Section[]
+}
+
+model Section {
+  section_id    Int              @id @default(autoincrement())
+  section_name  String           @db.VarChar(10)
+  dept_batch_id Int
+  dept_batch    Department_Batch @relation(fields: [dept_batch_id], references: [dept_batch_id])
+  students      Student[]
+}
+
+model Course {
+  course_id       Int              @id @default(autoincrement())
+  course_name     String           @db.VarChar(100)
+  course_code     String           @db.VarChar(100)
+  credit_hours    Int
+  dept_id         Int
+  department      Department       @relation(fields: [dept_id], references: [department_id])
+  // teachers assigned to courses
+  teacher_courses Teacher_Course[]
+  //  student enrolled in courses
+  enrollments     Enrollment[]
+  Grade           Grade[]
+}
+
+model Teacher_Course {
+  teacher_course_id Int     @id @default(autoincrement())
+  teacher_id        Int
+  course_id         Int
+  teacher           Teacher @relation(fields: [teacher_id], references: [teacher_id])
+  course            Course  @relation(fields: [course_id], references: [course_id])
+}
+
+model Semester {
+  semester_id   Int          @id @default(autoincrement())
+  semester_name String       @db.VarChar(100)
+  start_date    DateTime
+  end_date      DateTime
+  enrollments   Enrollment[]
+  Grade         Grade[]
+}
+
+// student-course enrollments (many to many)
+model Enrollment {
+  enrollment_id   Int      @id @default(autoincrement())
+  student_id      Int
+  course_id       Int
+  semester_id     Int
+  enrollment_date DateTime
+  student         Student  @relation(fields: [student_id], references: [student_id])
+  course          Course   @relation(fields: [course_id], references: [course_id])
+  semester        Semester @relation(fields: [semester_id], references: [semester_id])
+}
+
+// grade model to track students grade in courses
+
+model Grade {
+  grade_id    Int      @id @default(autoincrement())
+  student_id  Int
+  course_id   Int
+  semester_id Int
+  grade       String   @db.VarChar(5)
+  // relations
+  student     Student  @relation(fields: [student_id], references: [student_id])
+  course      Course   @relation(fields: [course_id], references: [course_id])
+  semester    Semester @relation(fields: [semester_id], references: [semester_id])
 }
