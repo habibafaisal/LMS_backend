@@ -10,7 +10,7 @@ datasource db {
 enum Role {
   ADMIN
   TEACHER
-  STUDET
+  STUDENT
 }
 
 // user for auth & roles
@@ -26,11 +26,11 @@ model User {
 }
 
 model Teacher {
-  teacher_id    Int        @id @default(autoincrement())
-  first_name    String     @db.VarChar(100)
-  last_name     String     @db.VarChar(100)
-  department_id Int
-  department    Department @relation(fields: [department_id], references: [department_id])
+  teacher_id    Int         @id @default(autoincrement())
+  first_name    String?     @db.VarChar(100)
+  last_name     String?     @db.VarChar(100)
+  department_id Int?
+  department    Department? @relation(fields: [department_id], references: [department_id])
 
   // relation to user model
   user_id Int  @unique
@@ -41,17 +41,17 @@ model Teacher {
 }
 
 model Student {
-  student_id     Int        @id @default(autoincrement())
-  first_name     String     @db.VarChar(100)
-  last_name      String     @db.VarChar(100)
-  phone_number   String     @db.VarChar(15)
-  department_id  Int
-  batch_id       Int
-  section_id     Int
-  admission_date DateTime
-  department     Department @relation(fields: [department_id], references: [department_id])
-  batch          Batch      @relation(fields: [batch_id], references: [batch_id])
-  section        Section    @relation(fields: [section_id], references: [section_id])
+  student_id     Int         @id @default(autoincrement())
+  first_name     String?     @db.VarChar(100)
+  last_name      String?     @db.VarChar(100)
+  phone_number   String?     @db.VarChar(15)
+  department_id  Int?
+  batch_id       Int?
+  section_id     Int?
+  admission_date DateTime?
+  department     Department? @relation(fields: [department_id], references: [department_id])
+  batch          Batch?      @relation(fields: [batch_id], references: [batch_id])
+  section        Section?    @relation(fields: [section_id], references: [section_id])
 
   // relation to user model
   user_id Int  @unique
