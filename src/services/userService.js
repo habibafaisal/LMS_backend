@@ -9,7 +9,7 @@ export const createUser = async (data) => {
 
   const hashedPassword = await hashPassword(password);
   const normalizedRole = role.toUpperCase();
-  console.log(normalizedRole);
+
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });

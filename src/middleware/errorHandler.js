@@ -2,8 +2,6 @@ import { constants } from "../utils/constants.js";
 const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode ? res.statusCode : 500;
   res.status(statusCode);
-  console.log("res.statusCode", res.statusCode);
-  console.log("statusCode", err.message);
   switch (statusCode) {
     case constants.NOT_FOUND:
       res.json({
