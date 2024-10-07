@@ -1,10 +1,13 @@
 import { constants } from "../utils/constants.js";
 const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode ? res.statusCode : 500;
+  res.status(statusCode);
+  console.log("res.statusCode", res.statusCode);
+  console.log("statusCode", err.message);
   switch (statusCode) {
     case constants.NOT_FOUND:
       res.json({
-        title: "Not Found Contact",
+        title: "Not Found",
         message: err.message,
         stackTrace: err.stack,
       });
@@ -43,7 +46,11 @@ const errorHandler = (err, req, res, next) => {
       break;
 
     default:
-      console.log("no error");
+      res.status(500).json({
+        title: "Unknown Error",
+        message: err.message,
+        stackTrace: err.stack,
+      });
       break;
   }
 };

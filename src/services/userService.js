@@ -2,22 +2,45 @@ import jsonwebtoken from "jsonwebtoken";
 import prisma from "../db/db.js";
 import { comparePasswords } from "../utils/comparePasswords.js";
 import { hashPassword } from "../utils/hashPassword.js";
+import { constants } from "../utils/constants.js";
 
 export const createUser = async (data) => {
   const { email, password, role } = data;
+
   const hashedPassword = await hashPassword(password);
   const normalizedRole = role.toUpperCase();
-
+  console.log(normalizedRole);
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
+  if (!email || !password || !role) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields (email, password, and role) are required.",
+    };
+  }
+
   if (existingUser) {
-    throw new Error("Email already exists");
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "Email already exists",
+    };
+  }
+
+  if (normalizedRole !== "TEACHER" && normalizedRole !== "STUDENT") {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "Invalid role",
+    };
   }
 
   const newUser = await prisma.user.create({
     data: { email, password: hashedPassword, role: normalizedRole },
   });
+
   if (normalizedRole === "TEACHER") {
     await prisma.teacher.create({
       data: {
@@ -30,26 +53,42 @@ export const createUser = async (data) => {
         user_id: newUser.user_id,
       },
     });
-  } else {
-    throw new Error("Invalid role");
   }
-  return newUser;
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "User created successfully",
+    user: newUser,
+  };
 };
 
 export const login = async (data) => {
   const { email, password } = data;
   if (!email || !password) {
-    throw new Error("All fields are required");
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields (email, password) are required.",
+    };
   }
   const user = await prisma.user.findUnique({
     where: { email },
   });
   if (!user) {
-    throw new Error("User not found");
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "User not found.",
+    };
   }
   const isPasswordValid = await comparePasswords(password, user.password);
+
   if (!isPasswordValid) {
-    throw new Error("Invalid email or password");
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "Invalid credentials.",
+    };
   }
 
   const accessToken = jsonwebtoken.sign(
@@ -59,5 +98,11 @@ export const login = async (data) => {
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "15m" }
   );
-  return accessToken;
+  return {
+    type: "Success",
+    statusCode: 200,
+    user: user,
+    message: "Login successful",
+    accessToken,
+  };
 };
