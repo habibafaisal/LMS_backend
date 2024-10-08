@@ -129,3 +129,26 @@ export const createDepartment = async (data) => {
     department: newDepartment,
   };
 };
+
+export const createBatch = async (data) => {
+  const { batch_year } = data;
+
+  if (!batch_year) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "Batch year is required",
+    };
+  }
+
+  const newBatch = await prisma.batch.create({
+    data: { batch_year },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Batch created successfully",
+    batch: newBatch,
+  };
+};

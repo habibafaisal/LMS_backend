@@ -1,5 +1,6 @@
 import expressAsyncHandler from "express-async-handler";
 import {
+  createBatch,
   createDepartment,
   createUser,
   login,
@@ -45,5 +46,17 @@ export const createNewDepartment = expressAsyncHandler(async (req, res) => {
     type,
     message,
     department,
+  });
+});
+
+export const createNewBatch = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, batch } = await createBatch(req.body);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    batch,
   });
 });
