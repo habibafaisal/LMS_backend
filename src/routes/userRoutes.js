@@ -1,5 +1,9 @@
 import express from "express";
-import { loginUser, registerUser } from "../controllers/userController.js";
+import {
+  createNewDepartment,
+  loginUser,
+  registerUser,
+} from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -15,7 +19,7 @@ router.post("/login", loginUser);
 
 // dept
 
-// router.post("/create/department", loginUser);
+router.post("/create/department", createNewDepartment);
 // router.post("/create/batch", loginUser);
 // router.post("/create/semester", loginUser);
 // router.post("/create/enrollment", loginUser);

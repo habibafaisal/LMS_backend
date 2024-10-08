@@ -106,3 +106,26 @@ export const login = async (data) => {
     accessToken,
   };
 };
+
+export const createDepartment = async (data) => {
+  const { department_name } = data;
+
+  if (!department_name) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "Department name is required",
+    };
+  }
+
+  const newDepartment = await prisma.department.create({
+    data: { department_name },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Department created successfully",
+    department: newDepartment,
+  };
+};
