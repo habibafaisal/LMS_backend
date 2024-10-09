@@ -1,8 +1,11 @@
 import expressAsyncHandler from "express-async-handler";
 import {
+  assignGrade,
   createBatch,
   createDepartment,
+  createSemester,
   createUser,
+  enrollStudentInCourse,
   login,
 } from "../services/userService.js";
 
@@ -58,5 +61,46 @@ export const createNewBatch = expressAsyncHandler(async (req, res) => {
     type,
     message,
     batch,
+  });
+});
+
+export const createNewSemester = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, semester } = await createSemester(
+    req.body
+  );
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    semester,
+  });
+});
+
+export const createStudentCourseEnrollment = expressAsyncHandler(
+  async (req, res) => {
+    const { type, message, statusCode, newEnrollment } =
+      await enrollStudentInCourse(req.body);
+    if (type === "Error") {
+      return res.status(statusCode).json({ type, message });
+    }
+    res.status(statusCode).json({
+      type,
+      message,
+      newEnrollment,
+    });
+  }
+);
+
+export const createStudentGrade = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, grade } = await assignGrade(req.body);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    grade,
   });
 });

@@ -152,3 +152,83 @@ export const createBatch = async (data) => {
     batch: newBatch,
   };
 };
+
+export const createSemester = async (data) => {
+  const { semester_name, start_date, end_date } = data;
+
+  if (!semester_name || !start_date || !end_date) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+
+  const newSemester = await prisma.semester.create({
+    data: { semester_name, start_date, end_date },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Semester created successfully",
+    semester: newSemester,
+  };
+};
+
+export const enrollStudentInCourse = async (data) => {
+  const { course_id, student_id, semester_id, enrollment_date } = data;
+
+  if (!course_id || !student_id || !semester_id || !enrollment_date) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+
+  const existingEnrollment = await prisma.enrollment.findFirst({
+    where: { student_id, course_id, semester_id },
+  });
+
+  if (existingEnrollment) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "Student is already enrolled in this course",
+    };
+  }
+
+  const newEnrollment = await prisma.enrollment.create({
+    data: { student_id, course_id, semester_id, enrollment_date },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Student enrolled successfully in the course",
+    enrollment: newEnrollment,
+  };
+};
+
+export const assignGrade = async (data) => {
+  const { student_id, course_id, semester_id, grade } = data;
+
+  if (!student_id || !course_id || !semester_id || !grade) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+  const createGrade = await prisma.grade.create({
+    data: { student_id, course_id, semester_id, grade },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Grade assigned successfully",
+    grade: createGrade,
+  };
+};
