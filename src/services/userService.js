@@ -3,16 +3,21 @@ import prisma from "../db/db.js";
 import { comparePasswords } from "../utils/comparePasswords.js";
 import { hashPassword } from "../utils/hashPassword.js";
 import { constants } from "../utils/constants.js";
+import { validateUser } from "../utils/validations.js";
 
 export const createUser = async (data) => {
+  const validation = validateUser(data);
+
+  if (!validation.isValid) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: validation.message,
+    };
+  }
+
   const { email, password, role } = data;
 
-  const hashedPassword = await hashPassword(password);
-  const normalizedRole = role.toUpperCase();
-
-  const existingUser = await prisma.user.findUnique({
-    where: { email },
-  });
   if (!email || !password || !role) {
     return {
       type: "Error",
@@ -20,6 +25,12 @@ export const createUser = async (data) => {
       message: "All fields (email, password, and role) are required.",
     };
   }
+  const hashedPassword = await hashPassword(password);
+  const normalizedRole = role.toUpperCase();
+
+  const existingUser = await prisma.user.findUnique({
+    where: { email },
+  });
 
   if (existingUser) {
     return {
@@ -44,13 +55,13 @@ export const createUser = async (data) => {
   if (normalizedRole === "TEACHER") {
     await prisma.teacher.create({
       data: {
-        user_id: newUser.user_id,
+        user_id: newUser.id,
       },
     });
   } else if (normalizedRole === "STUDENT") {
     await prisma.student.create({
       data: {
-        user_id: newUser.user_id,
+        user_id: newUser.id,
       },
     });
   }
@@ -153,6 +164,29 @@ export const createBatch = async (data) => {
   };
 };
 
+export const createCourse = async (data) => {
+  const { course_name, course_code, credit_hours, dept_id } = data;
+
+  if (!course_name || !course_code || !credit_hours || !dept_id) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+
+  const newCourse = await prisma.course.create({
+    data: { course_name, course_code, credit_hours, dept_id },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Semester created successfully",
+    course: newCourse,
+  };
+};
+
 export const createSemester = async (data) => {
   const { semester_name, start_date, end_date } = data;
 
@@ -173,6 +207,51 @@ export const createSemester = async (data) => {
     statusCode: 201,
     message: "Semester created successfully",
     semester: newSemester,
+  };
+};
+export const createSection = async (data) => {
+  const { section_name, dept_batch_id } = data;
+
+  if (!section_name || !dept_batch_id) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+
+  const newSection = await prisma.section.create({
+    data: { section_name, dept_batch_id },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Section created successfully",
+    semester: newSection,
+  };
+};
+
+export const assignDepartmentBatch = async (data) => {
+  const { department_id, batch_id } = data;
+
+  if (!department_id || !batch_id) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+
+  const departmentBatch = await prisma.department_Batch.create({
+    data: { department_id, batch_id },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Course assigned to teacher successfully",
+    departmentBatch,
   };
 };
 
@@ -230,5 +309,76 @@ export const assignGrade = async (data) => {
     statusCode: 201,
     message: "Grade assigned successfully",
     grade: createGrade,
+  };
+};
+
+export const assignCourseToTeacher = async (data) => {
+  const { teacher_id, course_id } = data;
+
+  if (!teacher_id || !course_id) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+
+  const courseTeacher = await prisma.teacher_Course.create({
+    data: { teacher_id, course_id },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Course assigned to teacher successfully",
+    courseTeacher,
+  };
+};
+
+export const getAllUsers = async () => {
+  const users = await prisma.user.findMany();
+  if (!users) {
+    return {
+      type: "Error",
+      statusCode: 404,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    users,
+  };
+};
+
+export const getAllTeachers = async () => {
+  const teachers = await prisma.teacher.findMany();
+  if (!teachers) {
+    return {
+      type: "Error",
+      statusCode: 404,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    teachers,
+  };
+};
+
+export const getAllStudents = async () => {
+  const students = await prisma.student.findMany();
+  if (!students) {
+    return {
+      type: "Error",
+      statusCode: 404,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    students,
   };
 };

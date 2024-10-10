@@ -1,11 +1,17 @@
 import expressAsyncHandler from "express-async-handler";
 import {
+  assignCourseToTeacher,
   assignGrade,
   createBatch,
+  createCourse,
   createDepartment,
+  createSection,
   createSemester,
   createUser,
   enrollStudentInCourse,
+  getAllStudents,
+  getAllTeachers,
+  getAllUsers,
   login,
 } from "../services/userService.js";
 
@@ -64,6 +70,48 @@ export const createNewBatch = expressAsyncHandler(async (req, res) => {
   });
 });
 
+export const createNewCourse = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, course } = await createCourse(req.body);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    course,
+  });
+});
+
+export const createNewDepartmentBatch = expressAsyncHandler(
+  async (req, res) => {
+    const { type, message, statusCode, departmentBatch } = await createBatch(
+      req.body
+    );
+    if (type === "Error") {
+      return res.status(statusCode).json({ type, message });
+    }
+    res.status(statusCode).json({
+      type,
+      message,
+      departmentBatch,
+    });
+  }
+);
+
+export const createNewSection = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, newSection } = await createSection(
+    req.body
+  );
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    newSection,
+  });
+});
+
 export const createNewSemester = expressAsyncHandler(async (req, res) => {
   const { type, message, statusCode, semester } = await createSemester(
     req.body
@@ -102,5 +150,62 @@ export const createStudentGrade = expressAsyncHandler(async (req, res) => {
     type,
     message,
     grade,
+  });
+});
+
+export const createCourseTeacher = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, courseTeacher } =
+    await assignCourseToTeacher(req.body);
+
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    courseTeacher,
+  });
+});
+
+export const getUsers = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, users } = await getAllUsers(req.body);
+
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    users,
+  });
+});
+
+export const getTeachers = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, teachers } = await getAllTeachers(
+    req.body
+  );
+
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    teachers,
+  });
+});
+
+export const getStudents = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, students } = await getAllStudents(
+    req.body
+  );
+
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    students,
   });
 });
