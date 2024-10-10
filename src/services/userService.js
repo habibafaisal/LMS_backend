@@ -340,7 +340,7 @@ export const getAllUsers = async () => {
   if (!users) {
     return {
       type: "Error",
-      statusCode: 404,
+      statusCode: constants.NOT_FOUND,
       message: "Not found",
     };
   }
@@ -356,7 +356,7 @@ export const getAllTeachers = async () => {
   if (!teachers) {
     return {
       type: "Error",
-      statusCode: 404,
+      statusCode: constants.NOT_FOUND,
       message: "Not found",
     };
   }
@@ -372,7 +372,7 @@ export const getAllStudents = async () => {
   if (!students) {
     return {
       type: "Error",
-      statusCode: 404,
+      statusCode: constants.NOT_FOUND,
       message: "Not found",
     };
   }
@@ -388,7 +388,7 @@ export const getAllDepartments = async () => {
   if (!departments) {
     return {
       type: "Error",
-      statusCode: 404,
+      statusCode: constants.NOT_FOUND,
       message: "Not found",
     };
   }
@@ -396,5 +396,70 @@ export const getAllDepartments = async () => {
     type: "Success",
     statusCode: 200,
     departments,
+  };
+};
+
+export const updateStudent = async ({ id, data }) => {
+  const studentId = parseInt(id, 10);
+  console.log(`updateStudent`, { studentId }, { data });
+  if (!studentId) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "ID is required",
+    };
+  }
+  const student = await prisma.student.update({
+    where: {
+      id: studentId,
+    },
+    data: {
+      ...data,
+    },
+  });
+
+  if (!student) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    student,
+  };
+};
+export const updateTeacher = async ({ id, data }) => {
+  const teacherId = parseInt(id, 10);
+  console.log(`updateStudent`, { teacherId }, { data });
+  if (!teacherId) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "ID is required",
+    };
+  }
+  const teacher = await prisma.teacher.update({
+    where: {
+      id: teacherId,
+    },
+    data: {
+      ...data,
+    },
+  });
+
+  if (!teacher) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    teacher,
   };
 };

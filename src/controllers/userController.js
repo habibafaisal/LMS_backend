@@ -14,6 +14,7 @@ import {
   getAllTeachers,
   getAllUsers,
   login,
+  updateTeacher,
 } from "../services/userService.js";
 
 export const registerUser = expressAsyncHandler(async (req, res) => {
@@ -169,7 +170,7 @@ export const createCourseTeacher = expressAsyncHandler(async (req, res) => {
 });
 
 export const getUsers = expressAsyncHandler(async (req, res) => {
-  const { type, message, statusCode, users } = await getAllUsers(req.body);
+  const { type, message, statusCode, users } = await getAllUsers();
 
   if (type === "Error") {
     return res.status(statusCode).json({ type, message });
@@ -182,9 +183,7 @@ export const getUsers = expressAsyncHandler(async (req, res) => {
 });
 
 export const getTeachers = expressAsyncHandler(async (req, res) => {
-  const { type, message, statusCode, teachers } = await getAllTeachers(
-    req.body
-  );
+  const { type, message, statusCode, teachers } = await getAllTeachers();
 
   if (type === "Error") {
     return res.status(statusCode).json({ type, message });
@@ -195,9 +194,7 @@ export const getTeachers = expressAsyncHandler(async (req, res) => {
 });
 
 export const getStudents = expressAsyncHandler(async (req, res) => {
-  const { type, message, statusCode, students } = await getAllStudents(
-    req.body
-  );
+  const { type, message, statusCode, students } = await getAllStudents();
 
   if (type === "Error") {
     return res.status(statusCode).json({ type, message });
@@ -208,14 +205,44 @@ export const getStudents = expressAsyncHandler(async (req, res) => {
 });
 
 export const getDepartments = expressAsyncHandler(async (req, res) => {
-  const { type, message, statusCode, departments } = await getAllDepartments(
-    req.body
-  );
+  const { type, message, statusCode, departments } = await getAllDepartments();
 
   if (type === "Error") {
     return res.status(statusCode).json({ type, message });
   }
   res.status(statusCode).json({
     departments,
+  });
+});
+
+export const updateATeacher = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  console.log({ id });
+  const { type, message, statusCode, teacher } = await updateTeacher({
+    id,
+    data,
+  });
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    teacher,
+  });
+});
+
+export const updateAStudent = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  console.log({ id });
+  const { type, message, statusCode, student } = await updateTeacher({
+    id,
+    data,
+  });
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    student,
   });
 });

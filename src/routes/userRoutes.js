@@ -15,6 +15,8 @@ import {
   getUsers,
   loginUser,
   registerUser,
+  updateAStudent,
+  updateATeacher,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -37,8 +39,8 @@ router.post("/create/enrollment", createStudentCourseEnrollment);
 router.post("/assign/grade", createStudentGrade);
 router.post("/assign/teacher/courses", createCourseTeacher);
 
-router.put("/update/student/id", loginUser);
-router.put("/update/teacher/id", loginUser);
+router.put("/update/student/id", updateAStudent);
+router.put("/update/teacher/:id", updateATeacher);
 // router.delete("/delete/id", loginUser);
 // router.post("/assign/student/department", loginUser);
 // router.post("/assign/student/batch", loginUser);
