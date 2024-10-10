@@ -382,3 +382,19 @@ export const getAllStudents = async () => {
     students,
   };
 };
+
+export const getAllDepartments = async () => {
+  const departments = await prisma.department.findMany();
+  if (!departments) {
+    return {
+      type: "Error",
+      statusCode: 404,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    departments,
+  };
+};

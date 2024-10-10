@@ -9,6 +9,7 @@ import {
   createSemester,
   createUser,
   enrollStudentInCourse,
+  getAllDepartments,
   getAllStudents,
   getAllTeachers,
   getAllUsers,
@@ -189,8 +190,6 @@ export const getTeachers = expressAsyncHandler(async (req, res) => {
     return res.status(statusCode).json({ type, message });
   }
   res.status(statusCode).json({
-    type,
-    message,
     teachers,
   });
 });
@@ -204,8 +203,19 @@ export const getStudents = expressAsyncHandler(async (req, res) => {
     return res.status(statusCode).json({ type, message });
   }
   res.status(statusCode).json({
-    type,
-    message,
     students,
+  });
+});
+
+export const getDepartments = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, departments } = await getAllDepartments(
+    req.body
+  );
+
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    departments,
   });
 });
