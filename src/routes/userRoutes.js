@@ -20,13 +20,14 @@ import {
   updateATeacher,
 } from "../controllers/userController.js";
 import validateToken from "../middleware/validateTokenHandler.js";
+import checkRole from "../middleware/rbac.js";
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 
-router.get("/getAllUsers", validateToken, getUsers);
+router.get("/getAllUsers", validateToken, checkRole(["ADMIN"]), getUsers);
 router.get("/getAllTeachers", getTeachers);
 router.get("/getAllAdmin", getAdmins);
 router.get("/getAllStudents", getStudents);

@@ -1,6 +1,7 @@
 import express from "express";
 import userRoutes from "./src/routes/userRoutes.js";
 import errorHandler from "./src/middleware/errorHandler.js";
+import validateToken from "./src/middleware/validateTokenHandler.js";
 
 const app = express();
 

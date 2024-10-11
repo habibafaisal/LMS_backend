@@ -96,7 +96,7 @@ export const login = async (data) => {
 
   const accessToken = jsonwebtoken.sign(
     {
-      user: { username: user.username, email: user.email, id: user.id },
+      user: { username: user.username, role: user.role, id: user.id },
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "15m" }
