@@ -10,6 +10,7 @@ import {
   createSemester,
   createUser,
   enrollStudentInCourse,
+  getAllAdmins,
   getAllDepartments,
   getAllStudents,
   getAllTeachers,
@@ -180,6 +181,19 @@ export const getUsers = expressAsyncHandler(async (req, res) => {
     type,
     message,
     users,
+  });
+});
+
+export const getAdmins = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, admins } = await getAllAdmins();
+
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    admins,
   });
 });
 

@@ -40,14 +40,6 @@ export const createUser = async (data) => {
     };
   }
 
-  if (normalizedRole !== "TEACHER" && normalizedRole !== "STUDENT") {
-    return {
-      type: "Error",
-      statusCode: constants.VALIDATION_ERROR,
-      message: "Invalid role",
-    };
-  }
-
   const newUser = await prisma.user.create({
     data: { email, password: hashedPassword, role: normalizedRole },
   });
@@ -387,6 +379,24 @@ export const getAllTeachers = async () => {
     type: "Success",
     statusCode: 200,
     teachers,
+  };
+};
+
+export const getAllAdmins = async () => {
+  const admins = await prisma.user.findMany({
+    where: { role: "ADMIN" },
+  });
+  if (!admins) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    admins,
   };
 };
 

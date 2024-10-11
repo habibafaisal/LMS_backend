@@ -9,6 +9,7 @@ import {
   createNewSemester,
   createStudentCourseEnrollment,
   createStudentGrade,
+  getAdmins,
   getDepartments,
   getStudents,
   getTeachers,
@@ -27,6 +28,7 @@ router.post("/login", loginUser);
 
 router.get("/getAllUsers", validateToken, getUsers);
 router.get("/getAllTeachers", getTeachers);
+router.get("/getAllAdmin", getAdmins);
 router.get("/getAllStudents", getStudents);
 router.get("/getAllDepartments", getDepartments);
 

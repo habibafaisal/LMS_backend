@@ -1,7 +1,7 @@
 import express from "express";
 import userRoutes from "./src/routes/userRoutes.js";
 import errorHandler from "./src/middleware/errorHandler.js";
-import prisma from "./src/db/db.js";
+
 const app = express();
 
 app.use(express.json());
