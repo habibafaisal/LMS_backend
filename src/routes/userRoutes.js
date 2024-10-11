@@ -18,13 +18,14 @@ import {
   updateAStudent,
   updateATeacher,
 } from "../controllers/userController.js";
+import validateToken from "../middleware/validateTokenHandler.js";
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 
-router.get("/getAllUsers", getUsers);
+router.get("/getAllUsers", validateToken, getUsers);
 router.get("/getAllTeachers", getTeachers);
 router.get("/getAllStudents", getStudents);
 router.get("/getAllDepartments", getDepartments);
@@ -41,6 +42,7 @@ router.post("/assign/teacher/courses", createCourseTeacher);
 
 router.put("/update/student/:id", updateAStudent);
 router.put("/update/teacher/:id", updateATeacher);
+
 // router.delete("/delete/id", loginUser);
 // router.post("/assign/student/department", loginUser);
 // router.post("/assign/student/batch", loginUser);
