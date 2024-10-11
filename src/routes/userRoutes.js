@@ -39,7 +39,7 @@ router.post("/create/enrollment", createStudentCourseEnrollment);
 router.post("/assign/grade", createStudentGrade);
 router.post("/assign/teacher/courses", createCourseTeacher);
 
-router.put("/update/student/id", updateAStudent);
+router.put("/update/student/:id", updateAStudent);
 router.put("/update/teacher/:id", updateATeacher);
 // router.delete("/delete/id", loginUser);
 // router.post("/assign/student/department", loginUser);

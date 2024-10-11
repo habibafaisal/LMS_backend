@@ -5,6 +5,7 @@ import {
   createBatch,
   createCourse,
   createDepartment,
+  createDepartmentBatch,
   createSection,
   createSemester,
   createUser,
@@ -14,6 +15,7 @@ import {
   getAllTeachers,
   getAllUsers,
   login,
+  updateStudent,
   updateTeacher,
 } from "../services/userService.js";
 
@@ -86,16 +88,15 @@ export const createNewCourse = expressAsyncHandler(async (req, res) => {
 
 export const createNewDepartmentBatch = expressAsyncHandler(
   async (req, res) => {
-    const { type, message, statusCode, departmentBatch } = await createBatch(
-      req.body
-    );
+    const { type, message, statusCode, deptBatch } =
+      await createDepartmentBatch(req.body);
     if (type === "Error") {
       return res.status(statusCode).json({ type, message });
     }
     res.status(statusCode).json({
       type,
       message,
-      departmentBatch,
+      deptBatch,
     });
   }
 );
@@ -218,7 +219,6 @@ export const getDepartments = expressAsyncHandler(async (req, res) => {
 export const updateATeacher = expressAsyncHandler(async (req, res) => {
   const id = req.params.id;
   const data = req.body;
-  console.log({ id });
   const { type, message, statusCode, teacher } = await updateTeacher({
     id,
     data,
@@ -234,8 +234,7 @@ export const updateATeacher = expressAsyncHandler(async (req, res) => {
 export const updateAStudent = expressAsyncHandler(async (req, res) => {
   const id = req.params.id;
   const data = req.body;
-  console.log({ id });
-  const { type, message, statusCode, student } = await updateTeacher({
+  const { type, message, statusCode, student } = await updateStudent({
     id,
     data,
   });

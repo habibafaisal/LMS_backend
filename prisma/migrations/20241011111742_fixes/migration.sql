@@ -28,10 +28,10 @@ CREATE TABLE `Student` (
     `first_name` VARCHAR(100) NULL,
     `last_name` VARCHAR(100) NULL,
     `phone_number` VARCHAR(15) NULL,
-    `department_id` INTEGER NULL,
-    `batch_id` INTEGER NULL,
-    `section_id` INTEGER NULL,
-    `admission_date` DATETIME(3) NULL,
+    `department_id` INTEGER NOT NULL,
+    `batch_id` INTEGER NOT NULL,
+    `section_id` INTEGER NOT NULL,
+    `admission_date` DATETIME(3) NOT NULL,
     `user_id` INTEGER NOT NULL,
 
     UNIQUE INDEX `Student_user_id_key`(`user_id`),
@@ -131,13 +131,13 @@ ALTER TABLE `Teacher` ADD CONSTRAINT `Teacher_department_id_fkey` FOREIGN KEY (`
 ALTER TABLE `Teacher` ADD CONSTRAINT `Teacher_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Student` ADD CONSTRAINT `Student_department_id_fkey` FOREIGN KEY (`department_id`) REFERENCES `Department`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Student` ADD CONSTRAINT `Student_department_id_fkey` FOREIGN KEY (`department_id`) REFERENCES `Department`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Student` ADD CONSTRAINT `Student_batch_id_fkey` FOREIGN KEY (`batch_id`) REFERENCES `Batch`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Student` ADD CONSTRAINT `Student_batch_id_fkey` FOREIGN KEY (`batch_id`) REFERENCES `Batch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Student` ADD CONSTRAINT `Student_section_id_fkey` FOREIGN KEY (`section_id`) REFERENCES `Section`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Student` ADD CONSTRAINT `Student_section_id_fkey` FOREIGN KEY (`section_id`) REFERENCES `Section`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Student` ADD CONSTRAINT `Student_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

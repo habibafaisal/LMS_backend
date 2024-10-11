@@ -164,6 +164,29 @@ export const createBatch = async (data) => {
   };
 };
 
+export const createDepartmentBatch = async (data) => {
+  const { department_id, batch_id } = data;
+
+  if (!department_id || !batch_id) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "All fields are required",
+    };
+  }
+
+  const newDeptBatch = await prisma.department_Batch.create({
+    data: { department_id, batch_id },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 201,
+    message: "Department Batch created successfully",
+    deptBatch: newDeptBatch,
+  };
+};
+
 export const createCourse = async (data) => {
   const { course_name, course_code, credit_hours, dept_id } = data;
 
@@ -433,7 +456,6 @@ export const updateStudent = async ({ id, data }) => {
 };
 export const updateTeacher = async ({ id, data }) => {
   const teacherId = parseInt(id, 10);
-  console.log(`updateStudent`, { teacherId }, { data });
   if (!teacherId) {
     return {
       type: "Error",
