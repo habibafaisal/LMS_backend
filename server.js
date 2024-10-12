@@ -1,7 +1,9 @@
 import express from "express";
 import userRoutes from "./src/routes/userRoutes.js";
+import teacherRoutes from "./src/routes/teacherRoutes.js";
+import studentRoutes from "./src/routes/studentRoutes.js";
+import authroutes from "./src/routes/authroutes.js";
 import errorHandler from "./src/middleware/errorHandler.js";
-import validateToken from "./src/middleware/validateTokenHandler.js";
 
 const app = express();
 
@@ -9,7 +11,11 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-app.use("/api/users", userRoutes);
+app.use("/api/", authroutes);
+app.use("/api/users/admin/", userRoutes);
+app.use("/api/users/teacher/", teacherRoutes);
+app.use("/api/users/student/", studentRoutes);
+
 app.use(errorHandler);
 
 app.listen(PORT, () => {

@@ -17,7 +17,7 @@ const validateToken = expressAsyncHandler(async (req, res, next) => {
           throw new Error("User not authorized");
         }
         req.user = decoded.user;
-        console.log(decoded);
+        console.log("User authorized", req.user);
         next();
       }
     );

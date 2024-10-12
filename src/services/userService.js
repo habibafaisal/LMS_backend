@@ -95,9 +95,8 @@ export const login = async (data) => {
   }
 
   const accessToken = jsonwebtoken.sign(
-    {
-      user: { username: user.username, role: user.role, id: user.id },
-    },
+    { user: { id: user.id, email: user.email, role: user.role } },
+
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "15m" }
   );
@@ -434,7 +433,6 @@ export const getAllDepartments = async () => {
 
 export const updateStudent = async ({ id, data }) => {
   const studentId = parseInt(id, 10);
-  console.log(`updateStudent`, { studentId }, { data });
   if (!studentId) {
     return {
       type: "Error",

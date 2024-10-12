@@ -24,11 +24,11 @@ import checkRole from "../middleware/rbac.js";
 
 const router = express.Router();
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+// router.post("/register", registerUser);
+// router.post("/login", loginUser);
 
 router.get("/getAllUsers", validateToken, checkRole(["ADMIN"]), getUsers);
-router.get("/getAllTeachers", getTeachers);
+router.get("/getAllTeachers", validateToken, checkRole(["ADMIN"]), getTeachers);
 router.get("/getAllAdmin", getAdmins);
 router.get("/getAllStudents", getStudents);
 router.get("/getAllDepartments", getDepartments);
