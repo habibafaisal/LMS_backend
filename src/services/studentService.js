@@ -1,7 +1,7 @@
 import prisma from "../db/db.js";
 import { constants } from "../utils/constants.js";
 
-export const getDetails = async ({ userId }) => {
+export const getDetails = async (userId) => {
   console.log({ userId });
   const student = await prisma.student.findUnique({
     where: {

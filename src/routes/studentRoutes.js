@@ -2,10 +2,11 @@
 
 import express from "express";
 import { getStudentDetails } from "../controllers/studentController.js";
+import validateToken from "../middleware/validateTokenHandler.js";
 
 const router = express.Router();
 
-router.get("/getDetails", getStudentDetails);
+router.get("/getDetails", validateToken, getStudentDetails);
 // router.get("/getEnrollments", getStudents);
 // router.get("/getGrades", getStudents);
 
