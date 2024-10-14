@@ -49,7 +49,7 @@ export const getEnrollments = async (userId) => {
   };
 };
 export const getGrades = async (userId) => {
-  const grades = await prisma.grade.findUnique({
+  const grades = await prisma.grade.findFirst({
     where: {
       student: {
         user_id: userId,
