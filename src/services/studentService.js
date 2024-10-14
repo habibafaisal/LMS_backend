@@ -28,7 +28,7 @@ export const getDetails = async (userId) => {
   };
 };
 export const getEnrollments = async (userId) => {
-  const enrollments = await prisma.enrollment.findUnique({
+  const enrollments = await prisma.enrollment.findFirst({
     where: {
       student: {
         user_id: userId,
@@ -67,5 +67,28 @@ export const getGrades = async (userId) => {
     type: "Success",
     statusCode: 200,
     grades,
+  };
+};
+
+export const updateDetails = async (userId, updatedData) => {
+  const student = await prisma.student.update({
+    where: {
+      user_id: userId,
+    },
+    data: { ...updatedData },
+  });
+
+  if (!student) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Student not found",
+    };
+  }
+  return {
+    type: "Success",
+    message: "Student details updated",
+    statusCode: 200,
+    student,
   };
 };

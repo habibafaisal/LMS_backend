@@ -3,6 +3,7 @@ import {
   getDetails,
   getEnrollments,
   getGrades,
+  updateDetails,
 } from "../services/studentService.js";
 
 export const getStudentDetails = expressAsyncHandler(async (req, res) => {
@@ -40,5 +41,23 @@ export const getStudentGrades = expressAsyncHandler(async (req, res) => {
     type,
     message,
     grades,
+  });
+});
+
+export const updateStudentDetails = expressAsyncHandler(async (req, res) => {
+  const id = req.user.id;
+  const updatedData = req.body;
+  console.log({ id }, { updatedData });
+  const { type, message, statusCode, student } = await updateDetails(
+    id,
+    updatedData
+  );
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    student,
   });
 });
