@@ -2,7 +2,6 @@ import prisma from "../db/db.js";
 import { constants } from "../utils/constants.js";
 
 export const getDetails = async (userId) => {
-  console.log({ userId });
   const student = await prisma.student.findUnique({
     where: {
       user_id: userId,
@@ -28,5 +27,45 @@ export const getDetails = async (userId) => {
     student,
   };
 };
-export const getEnrollments = async () => {};
-export const getGrades = async () => {};
+export const getEnrollments = async (userId) => {
+  const enrollments = await prisma.enrollment.findUnique({
+    where: {
+      student: {
+        user_id: userId,
+      },
+    },
+  });
+  if (!enrollments || enrollments.length === 0) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not enrollments found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    enrollments,
+  };
+};
+export const getGrades = async (userId) => {
+  const grades = await prisma.grade.findUnique({
+    where: {
+      student: {
+        user_id: userId,
+      },
+    },
+  });
+  if (!grades || grades.length === 0) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not grades found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    grades,
+  };
+};
