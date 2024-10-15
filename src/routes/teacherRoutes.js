@@ -2,14 +2,20 @@
 
 import express from "express";
 import validateToken from "../middleware/validateTokenHandler.js";
-import { getTeacherDetails } from "../controllers/teacherController.js";
+import {
+  getTeacherCourses,
+  getTeacherDetails,
+  updateTeacherDetails,
+} from "../controllers/teacherController.js";
 
 const router = express.Router();
 
 router.get("/getDetails", validateToken, getTeacherDetails);
-// router.get("/getEnrollments", validateToken, getStudentEnrollments);
-// router.get("/getGrades", validateToken, getStudentGrades);
+router.get("/courses", validateToken, getTeacherCourses);
 
-// router.patch("/updateDetails", validateToken, updateStudentDetails);
+// router.get("/getstudents", validateToken, getTeacherDetails);
+// router.get("/assignGrades", validateToken, getStudentGrades);
+
+router.patch("/updateDetails", validateToken, updateTeacherDetails);
 
 export default router;

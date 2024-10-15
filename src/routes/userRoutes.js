@@ -33,6 +33,11 @@ router.get("/getAllAdmin", getAdmins);
 router.get("/getAllStudents", getStudents);
 router.get("/getAllDepartments", getDepartments);
 
+// router.get("/getDepartmentById/:id", getDepartments);
+// router.get("/getTeacherById/:id", getDepartments);
+// router.get("/getCourseById/:id", getDepartments);
+// router.get("/getStudentById/:id", getDepartments);
+
 router.post("/create/department", createNewDepartment);
 router.post("/create/batch", createNewBatch);
 router.post("/create/semester", createNewSemester);
@@ -46,6 +51,6 @@ router.post("/assign/teacher/courses", createCourseTeacher);
 router.put("/update/student/:id", updateAStudent);
 router.put("/update/teacher/:id", updateATeacher);
 
-// router.delete("/delete/id", loginUser);
+router.delete("/delete/:id", loginUser);
 
 export default router;
