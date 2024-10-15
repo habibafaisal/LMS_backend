@@ -571,7 +571,7 @@ export const deleteStudent = async (id) => {
       user_id: id,
     },
   });
-
+  console.log("st id", student.id);
   if (!student) {
     return {
       type: "Error",
@@ -586,7 +586,7 @@ export const deleteStudent = async (id) => {
     },
   });
 
-  await prisma.grade.delete({
+  await prisma.grade.deleteMany({
     where: {
       student_id: student.id,
     },
@@ -600,6 +600,6 @@ export const deleteStudent = async (id) => {
     type: "Success",
     statusCode: 200,
     message: "Student and related data deleted successfully",
-    teacher,
+    student,
   };
 };
