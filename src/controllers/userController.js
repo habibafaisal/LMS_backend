@@ -9,6 +9,7 @@ import {
   createSection,
   createSemester,
   createUser,
+  deleteAUser,
   enrollStudentInCourse,
   getAllAdmins,
   getAllDepartments,
@@ -257,5 +258,18 @@ export const updateAStudent = expressAsyncHandler(async (req, res) => {
   }
   res.status(statusCode).json({
     student,
+  });
+});
+
+export const deleteUser = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { type, message, statusCode, user } = await deleteAUser(id);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    user,
   });
 });

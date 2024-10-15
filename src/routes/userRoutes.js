@@ -9,6 +9,7 @@ import {
   createNewSemester,
   createStudentCourseEnrollment,
   createStudentGrade,
+  deleteUser,
   getAdmins,
   getDepartments,
   getStudents,
@@ -27,9 +28,9 @@ const router = express.Router();
 // router.post("/register", registerUser);
 // router.post("/login", loginUser);
 
-router.get("/getAllUsers", validateToken, checkRole(["ADMIN"]), getUsers);
+router.get("/getAllUsers", getUsers);
 router.get("/getAllTeachers", validateToken, checkRole(["ADMIN"]), getTeachers);
-router.get("/getAllAdmin", getAdmins);
+router.get("/getAllAdmin", checkRole(["ADMIN"]), getAdmins);
 router.get("/getAllStudents", getStudents);
 router.get("/getAllDepartments", getDepartments);
 
@@ -51,6 +52,6 @@ router.post("/assign/teacher/courses", createCourseTeacher);
 router.put("/update/student/:id", updateAStudent);
 router.put("/update/teacher/:id", updateATeacher);
 
-router.delete("/delete/:id", loginUser);
+router.delete("/delete/:id", deleteUser);
 
 export default router;

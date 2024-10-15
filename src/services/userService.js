@@ -493,3 +493,113 @@ export const updateTeacher = async ({ id, data }) => {
     teacher,
   };
 };
+
+export const deleteAUser = async (id) => {
+  const userId = parseInt(id, 10);
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  if (!user) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "User not found",
+    };
+  }
+
+  if (user.role === "STUDENT") {
+    await deleteStudent(userId);
+  } else if (user.role === "TEACHER") {
+    await deleteTeacher(userId);
+  }
+
+  await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 200,
+    message: "User deleted successfully",
+    user,
+  };
+};
+
+export const deleteTeacher = async (id) => {
+  const teacher = await prisma.teacher.findUnique({
+    where: {
+      user_id: id,
+    },
+  });
+
+  if (!teacher) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Teacher not found",
+    };
+  }
+
+  await prisma.teacher_Course.deleteMany({
+    where: {
+      teacher_id: teacher.id,
+    },
+  });
+
+  await prisma.teacher.delete({
+    where: {
+      id: teacher.id,
+    },
+  });
+
+  return {
+    type: "Success",
+    statusCode: 200,
+    message: "Teacher and related courses deleted successfully",
+    teacher,
+  };
+};
+
+export const deleteStudent = async (id) => {
+  const student = await prisma.student.findUnique({
+    where: {
+      user_id: id,
+    },
+  });
+
+  if (!student) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Teacher not found",
+    };
+  }
+
+  await prisma.enrollment.deleteMany({
+    where: {
+      student_id: student.id,
+    },
+  });
+
+  await prisma.grade.delete({
+    where: {
+      student_id: student.id,
+    },
+  });
+  await prisma.student.delete({
+    where: {
+      id: student.id,
+    },
+  });
+  return {
+    type: "Success",
+    statusCode: 200,
+    message: "Student and related data deleted successfully",
+    teacher,
+  };
+};
