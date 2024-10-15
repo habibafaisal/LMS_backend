@@ -29,9 +29,6 @@ import checkRole from "../middleware/rbac.js";
 
 const router = express.Router();
 
-// router.post("/register", registerUser);
-// router.post("/login", loginUser);
-
 router.get("/getAllUsers", getUsers);
 router.get("/getAllTeachers", validateToken, checkRole(["ADMIN"]), getTeachers);
 router.get("/getAllAdmin", checkRole(["ADMIN"]), getAdmins);
