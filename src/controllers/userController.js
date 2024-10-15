@@ -16,6 +16,10 @@ import {
   getAllStudents,
   getAllTeachers,
   getAllUsers,
+  getCoursetById,
+  getDepartmentById,
+  getStudentById,
+  getTeacherById,
   login,
   updateStudent,
   updateTeacher,
@@ -258,6 +262,62 @@ export const updateAStudent = expressAsyncHandler(async (req, res) => {
   }
   res.status(statusCode).json({
     student,
+  });
+});
+
+export const departmentById = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { type, message, statusCode, department } = await getDepartmentById(id);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+
+  res.status(statusCode).json({
+    type,
+    message,
+    department,
+  });
+});
+
+export const courseById = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { type, message, statusCode, course } = await getCoursetById(id);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+
+  res.status(statusCode).json({
+    type,
+    message,
+    course,
+  });
+});
+
+export const studentById = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { type, message, statusCode, student } = await getStudentById(id);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+
+  res.status(statusCode).json({
+    type,
+    message,
+    student,
+  });
+});
+
+export const teacherById = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { type, message, statusCode, teacher } = await getTeacherById(id);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+
+  res.status(statusCode).json({
+    type,
+    message,
+    teacher,
   });
 });
 

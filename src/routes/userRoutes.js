@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  courseById,
   createCourseTeacher,
   createNewBatch,
   createNewCourse,
@@ -10,6 +11,7 @@ import {
   createStudentCourseEnrollment,
   createStudentGrade,
   deleteUser,
+  departmentById,
   getAdmins,
   getDepartments,
   getStudents,
@@ -17,6 +19,8 @@ import {
   getUsers,
   loginUser,
   registerUser,
+  studentById,
+  teacherById,
   updateAStudent,
   updateATeacher,
 } from "../controllers/userController.js";
@@ -34,10 +38,10 @@ router.get("/getAllAdmin", checkRole(["ADMIN"]), getAdmins);
 router.get("/getAllStudents", getStudents);
 router.get("/getAllDepartments", getDepartments);
 
-// router.get("/getDepartmentById/:id", getDepartments);
-// router.get("/getTeacherById/:id", getDepartments);
-// router.get("/getCourseById/:id", getDepartments);
-// router.get("/getStudentById/:id", getDepartments);
+router.get("/getDepartmentById/:id", departmentById);
+router.get("/getTeacherById/:id", teacherById);
+router.get("/getCourseById/:id", courseById);
+router.get("/getStudentById/:id", studentById);
 
 router.post("/create/department", createNewDepartment);
 router.post("/create/batch", createNewBatch);

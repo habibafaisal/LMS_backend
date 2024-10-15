@@ -431,6 +431,125 @@ export const getAllDepartments = async () => {
   };
 };
 
+export const getDepartmentById = async (deptId) => {
+  const id = parseInt(deptId, 10);
+
+  const department = await prisma.department.findUnique({
+    where: { id },
+    include: {
+      teachers: true,
+      courses: true,
+      students: true,
+    },
+  });
+  if (!department) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    department,
+  };
+};
+export const getCoursetById = async (courseId) => {
+  const id = parseInt(courseId, 10);
+
+  const course = await prisma.course.findUnique({
+    where: { id },
+    include: {
+      department: true,
+      teacher_courses: {
+        include: {
+          teacher: true,
+        },
+      },
+      enrollments: {
+        include: {
+          student: true,
+          semester: true,
+        },
+      },
+    },
+  });
+  if (!course) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    course,
+  };
+};
+
+export const getTeacherById = async (teacherId) => {
+  const id = parseInt(teacherId, 10);
+
+  const teacher = await prisma.teacher.findUnique({
+    where: { id },
+    include: {
+      department: true,
+      teacher_courses: {
+        include: {
+          course: true,
+        },
+      },
+      user: true,
+    },
+  });
+  if (!teacher) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    teacher,
+  };
+};
+
+export const getStudentById = async (studentId) => {
+  const id = parseInt(studentId, 10);
+
+  const student = await prisma.student.findUnique({
+    where: { id },
+    include: {
+      department: true,
+      batch: true,
+      section: true,
+      user: true,
+      enrollments: {
+        include: {
+          course: true,
+          semester: true,
+        },
+      },
+    },
+  });
+  if (!student) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    student,
+  };
+};
+
 export const updateStudent = async ({ id, data }) => {
   const studentId = parseInt(id, 10);
   if (!studentId) {
