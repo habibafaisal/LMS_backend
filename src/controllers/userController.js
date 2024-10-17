@@ -10,6 +10,7 @@ import {
   createSemester,
   createUser,
   deleteAUser,
+  deleteAnEnrollmet,
   enrollStudentInCourse,
   getAllAdmins,
   getAllCourses,
@@ -341,5 +342,18 @@ export const deleteUser = expressAsyncHandler(async (req, res) => {
     type,
     message,
     user,
+  });
+});
+
+export const deleteEnrollment = expressAsyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { type, message, statusCode, enrollment } = await deleteAnEnrollmet(id);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    enrollment,
   });
 });

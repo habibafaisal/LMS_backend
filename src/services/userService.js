@@ -771,3 +771,26 @@ export const deleteStudent = async (id) => {
     student,
   };
 };
+
+export const deleteAnEnrollmet = async (enrollmentId) => {
+  const id = parseInt(enrollmentId, 10);
+
+  const enrollment = await prisma.enrollment.delete({
+    where: {
+      id: id,
+    },
+  });
+  if (!enrollment) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Enrollment not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    message: "Enrollment data deleted successfully",
+    enrollment,
+  };
+};

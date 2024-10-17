@@ -10,6 +10,7 @@ import {
   createNewSemester,
   createStudentCourseEnrollment,
   createStudentGrade,
+  deleteEnrollment,
   deleteUser,
   departmentById,
   getAdmins,
@@ -57,5 +58,6 @@ router.put("/update/student/:id", updateAStudent);
 router.put("/update/teacher/:id", updateATeacher);
 
 router.delete("/delete/:id", deleteUser);
+router.delete("/delete/enrollment/:id", deleteEnrollment);
 
 export default router;
