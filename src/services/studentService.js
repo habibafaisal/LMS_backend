@@ -28,10 +28,17 @@ export const getDetails = async (userId) => {
   };
 };
 export const getEnrollments = async (userId) => {
-  const enrollments = await prisma.enrollment.findFirst({
+  const enrollments = await prisma.enrollment.findMany({
     where: {
       student: {
         user_id: userId,
+      },
+    },
+    include: {
+      course: {
+        select: {
+          credit_hours: true,
+        },
       },
     },
   });

@@ -11,6 +11,11 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+// app.use(process.env.BASE_URL, authroutes);
+// app.use(process.env.BASE_URL + "/users/admin/", userRoutes);
+// app.use(process.env.BASE_URL + "/users/teacher/", teacherRoutes);
+// app.use(process.env.BASE_URL + "/users/student/", studentRoutes);
+
 app.use("/api/", authroutes);
 app.use("/api/users/admin/", userRoutes);
 app.use("/api/users/teacher/", teacherRoutes);

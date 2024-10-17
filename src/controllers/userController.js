@@ -12,6 +12,7 @@ import {
   deleteAUser,
   enrollStudentInCourse,
   getAllAdmins,
+  getAllCourses,
   getAllDepartments,
   getAllStudents,
   getAllTeachers,
@@ -234,7 +235,16 @@ export const getDepartments = expressAsyncHandler(async (req, res) => {
     departments,
   });
 });
+export const getCourses = expressAsyncHandler(async (req, res) => {
+  const { type, message, statusCode, courses } = await getAllCourses();
 
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    courses,
+  });
+});
 export const updateATeacher = expressAsyncHandler(async (req, res) => {
   const id = req.params.id;
   const data = req.body;

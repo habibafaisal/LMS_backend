@@ -3,6 +3,7 @@
 import express from "express";
 import validateToken from "../middleware/validateTokenHandler.js";
 import {
+  getStudents,
   getTeacherCourses,
   getTeacherDetails,
   updateTeacherDetails,
@@ -13,8 +14,8 @@ const router = express.Router();
 router.get("/getDetails", validateToken, getTeacherDetails);
 router.get("/courses", validateToken, getTeacherCourses);
 
-// router.get("/getstudents", validateToken, getTeacherDetails);
-// router.get("/assignGrades", validateToken, getStudentGrades);
+router.get("/getStudents", validateToken, getStudents);
+// router.post("/assignGrades", validateToken, assignGrades);
 
 router.patch("/updateDetails", validateToken, updateTeacherDetails);
 

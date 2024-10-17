@@ -1,6 +1,7 @@
 import {
   getCourses,
   getDetails,
+  getMyStudents,
   updateDetails,
 } from "../services/teacherService.js";
 import expressAsyncHandler from "express-async-handler";
@@ -48,3 +49,31 @@ export const getTeacherCourses = expressAsyncHandler(async (req, res) => {
     courses,
   });
 });
+
+export const getStudents = expressAsyncHandler(async (req, res) => {
+  const id = req.user.id;
+
+  const { type, message, statusCode, students } = await getMyStudents(id);
+  if (type === "Error") {
+    return res.status(statusCode).json({ type, message });
+  }
+  res.status(statusCode).json({
+    type,
+    message,
+    students,
+  });
+});
+
+// export const assignGrades = expressAsyncHandler(async (req, res) => {
+//   const id = req.user.id;
+
+//   const { type, message, statusCode, data } = await assignGradesToStudent(id);
+//   if (type === "Error") {
+//     return res.status(statusCode).json({ type, message });
+//   }
+//   res.status(statusCode).json({
+//     type,
+//     message,
+//     data,
+//   });
+// });

@@ -78,3 +78,66 @@ export const getCourses = async (userId) => {
     courses: teacherCourses.teacher_courses,
   };
 };
+
+export const getMyStudents = async (teacherId) => {
+  const students = await prisma.teacher.findUnique({
+    where: { id: teacherId },
+    include: {
+      teacher_courses: {
+        include: {
+          course: {
+            include: {
+              enrollments: {
+                include: {
+                  student: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!students) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+
+  return {
+    type: "Success",
+    statusCode: 200,
+    students,
+  };
+};
+
+// export const assignGradesToStudent = async (teacherId) => {
+//    const students = await prisma.teacher.findUnique({
+//      where: { id: teacherId },
+//      include: {
+//        teacher_courses: {
+//          include: {
+//            course: {
+//              include: {
+//                enrollments: {
+//                  include: {
+//                    student: true,
+//                  },
+//                },
+//              },
+//            },
+//          },
+//        },
+//      },
+//    });
+  
+  
+//   return {
+//     type: "Success",
+//     statusCode: 200,
+//     data,
+//   };
+// };

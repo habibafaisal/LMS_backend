@@ -291,6 +291,39 @@ export const enrollStudentInCourse = async (data) => {
       message: "Student is already enrolled in this course",
     };
   }
+  const course = await prisma.course.findUnique({
+    where: { id: course_id },
+    select: { credit_hours: true },
+  });
+
+  if (!course) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Course not found",
+    };
+  }
+
+  const totalStudentCredits = await prisma.enrollment.findMany({
+    where: { student_id, semester_id },
+    include: {
+      course: true,
+    },
+  });
+
+  let totalCredits = 0;
+
+  totalStudentCredits.forEach((c) => {
+    totalCredits += c.course.credit_hours;
+  });
+
+  if (totalCredits + course.credit_hours > 16) {
+    return {
+      type: "Error",
+      statusCode: constants.VALIDATION_ERROR,
+      message: "Student has reached the maximum credit hours for the semester",
+    };
+  }
 
   const newEnrollment = await prisma.enrollment.create({
     data: { student_id, course_id, semester_id, enrollment_date },
@@ -428,6 +461,22 @@ export const getAllDepartments = async () => {
     type: "Success",
     statusCode: 200,
     departments,
+  };
+};
+
+export const getAllCourses = async () => {
+  const courses = await prisma.course.findMany();
+  if (!courses) {
+    return {
+      type: "Error",
+      statusCode: constants.NOT_FOUND,
+      message: "Not found",
+    };
+  }
+  return {
+    type: "Success",
+    statusCode: 200,
+    courses,
   };
 };
 

@@ -13,6 +13,7 @@ import {
   deleteUser,
   departmentById,
   getAdmins,
+  getCourses,
   getDepartments,
   getStudents,
   getTeachers,
@@ -30,10 +31,12 @@ import checkRole from "../middleware/rbac.js";
 const router = express.Router();
 
 router.get("/getAllUsers", getUsers);
-router.get("/getAllTeachers", validateToken, checkRole(["ADMIN"]), getTeachers);
+router.get("/getAllTeachers", getTeachers);
+// router.get("/getAllTeachers", validateToken, checkRole(["ADMIN"]), getTeachers);
 router.get("/getAllAdmin", checkRole(["ADMIN"]), getAdmins);
 router.get("/getAllStudents", getStudents);
 router.get("/getAllDepartments", getDepartments);
+router.get("/getAllCourses", getCourses);
 
 router.get("/getDepartmentById/:id", departmentById);
 router.get("/getTeacherById/:id", teacherById);
